@@ -25,7 +25,6 @@ public class NotificationService {
     private String frontendUrl;
 
 
-
     @Scheduled(cron = "0 0 22 * * *", zone = "IST")
     public void sendDailyIncomeExpenseReminder() {
         log.info("Job started: sendDailyIncomeExpenseReminder()");
@@ -67,3 +66,4 @@ public class NotificationService {
         log.info("Job completed: sendDailyExpenseSummary()");
     }
 }
+

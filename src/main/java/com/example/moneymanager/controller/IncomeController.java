@@ -34,3 +34,4 @@ public class IncomeController {
         return ResponseEntity.noContent().build();
     }
 }
+

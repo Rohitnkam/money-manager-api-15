@@ -14,3 +14,4 @@ public class FilterDTO {
     private String sortField; //date, amount, name
     private String sortOrder; //asc or desc
 }
+

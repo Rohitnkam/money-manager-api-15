@@ -1,49 +1,45 @@
 package com.example.moneymanager.service;
 
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
-
-import java.util.List;
-import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
 public class EmailService {
 
-    @Value("${brevo.api.key}")
-    private String brevoApiKey;
+    private final JavaMailSender mailSender;
 
-    @Value("${brevo.from.email}")
+    @Value("${spring.mail.properties.mail.smtp.from}")
     private String fromEmail;
 
     public void sendEmail(String to, String subject, String body) {
         try {
-            String url = "https://api.brevo.com/v3/smtp/email";
-
-            // Build the email payload
-            Map<String, Object> emailData = Map.of(
-                    "sender", Map.of("email", fromEmail, "name", "Money Manager"),
-                    "to", List.of(Map.of("email", to)),
-                    "subject", subject,
-                    "htmlContent", "<html><body>" + body + "</body></html>"
-            );
-
-            // Set the headers
-            HttpHeaders headers = new HttpHeaders();
-            headers.set("api-key", brevoApiKey);
-            headers.setContentType(MediaType.APPLICATION_JSON);
-
-            // Send the email
-            RestTemplate restTemplate = new RestTemplate();
-            restTemplate.postForEntity(url, new HttpEntity<>(emailData, headers), String.class);
-
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to send email via Brevo API: " + e.getMessage(), e);
+            SimpleMailMessage message = new SimpleMailMessage();
+            message.setFrom(fromEmail);
+            message.setTo(to);
+            message.setSubject(subject);
+            message.setText(body);
+            mailSender.send(message);
+        }catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
         }
+    }
+
+    public void sendEmailWithAttachment(String to, String subject, String body, byte[] attachment, String filename) throws MessagingException {
+        MimeMessage message = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message, true);
+        helper.setFrom(fromEmail);
+        helper.setTo(to);
+        helper.setSubject(subject);
+        helper.setText(body);
+        helper.addAttachment(filename, new ByteArrayResource(attachment));
+        mailSender.send(message);
     }
 }

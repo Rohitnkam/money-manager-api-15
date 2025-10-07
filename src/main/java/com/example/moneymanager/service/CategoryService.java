@@ -14,7 +14,7 @@ import java.util.List;
 public class CategoryService {
 
     private final ProfileService profileService;
-    private final CategoryRepository categoryRepository;//save category
+    private final CategoryRepository categoryRepository;
 
     //save category
     public CategoryDTO saveCategory(CategoryDTO categoryDTO) {
@@ -62,7 +62,6 @@ public class CategoryService {
                 .build();
     }
 
-
     private CategoryDTO toDTO(CategoryEntity entity) {
         return CategoryDTO.builder()
                     .id(entity.getId())
@@ -73,6 +72,5 @@ public class CategoryService {
                     .updatedAt(entity.getUpdatedAt())
                     .type(entity.getType())
                     .build();
-
         }
 }

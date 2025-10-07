@@ -17,7 +17,6 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class IncomeService {
-
     private final CategoryRepository categoryRepository;
     private final IncomeRepository incomeRepository;
     private final ProfileService profileService;
@@ -32,6 +31,16 @@ public class IncomeService {
         return toDTO(newExpense);
     }
 
+    // Retrieves all incomes for current month/based on the start date and end date
+    public List<IncomeDTO> getCurrentMonthIncomesForCurrentUser() {
+        ProfileEntity profile = profileService.getCurrentProfile();
+        LocalDate now = LocalDate.now();
+        LocalDate startDate = now.withDayOfMonth(1);
+        LocalDate endDate = now.withDayOfMonth(now.lengthOfMonth());
+        List<IncomeEntity> list = incomeRepository.findByProfileIdAndDateBetween(profile.getId(), startDate, endDate);
+        return list.stream().map(this::toDTO).toList();
+    }
+
     //delete income by id for current user
     public void deleteIncome(Long incomeId) {
         ProfileEntity profile = profileService.getCurrentProfile();
@@ -41,16 +50,6 @@ public class IncomeService {
             throw new RuntimeException("Unauthorized to delete this income");
         }
         incomeRepository.delete(entity);
-    }
-
-    // Retrieves all incomes for current month/based on the start date and end date
-    public List<IncomeDTO> getCurrentMonthIncomesForCurrentUser() {
-        ProfileEntity profile = profileService.getCurrentProfile();
-        LocalDate now = LocalDate.now();
-        LocalDate startDate = now.withDayOfMonth(1);
-        LocalDate endDate = now.withDayOfMonth(now.lengthOfMonth());
-        List<IncomeEntity> list = incomeRepository.findByProfileIdAndDateBetween(profile.getId(), startDate, endDate);
-        return list.stream().map(this::toDTO).toList();
     }
 
     // Get latest 5 incomes for current user

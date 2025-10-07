@@ -24,4 +24,5 @@ public class RecentTransactionDTO {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private String type;
+
 }

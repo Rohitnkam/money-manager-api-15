@@ -40,5 +40,4 @@ public class CategoryController {
         CategoryDTO updatedCategory = categoryService.updateCategory(categoryId, categoryDTO);
         return ResponseEntity.ok(updatedCategory);
     }
-
 }

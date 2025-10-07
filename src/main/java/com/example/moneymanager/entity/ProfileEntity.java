@@ -18,7 +18,6 @@ import java.time.LocalDateTime;
 @Builder
 public class ProfileEntity {
 
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -41,4 +40,5 @@ public class ProfileEntity {
             isActive = false;
         }
     }
+
 }

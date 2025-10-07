@@ -10,6 +10,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
+
 public interface ExpenseRepository extends JpaRepository<ExpenseEntity, Long> {
 
     //select * from tbl_expenses where profile_id = ?1 order by date desc
